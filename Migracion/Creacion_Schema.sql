@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `delilah`.`user` (
   `last_name` VARCHAR(60) NOT NULL,
   `address` VARCHAR(100) NOT NULL,
   `phone` VARCHAR(45) NOT NULL,
-  `id_role` INT(11) NOT NULL,
+  `id_role` INT(11) NOT NULL DEFAULT 2,
   PRIMARY KEY (`id_user`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
@@ -193,8 +193,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `delilah`;
-INSERT INTO `delilah`.`user` (`id_user`, `username`,`email`,`password`, `name`, `last_name`, `address`, `phone`, `id_role`) VALUES (1, 'Roman', 'romansarmientogomez@gmail.com', '123456', 'Roman', 'Sarmiento Gomez', 'cra 27 15 94', '3001234567', 1);
-INSERT INTO `delilah`.`user` (`id_user`, `username`,`email`,`password`, `name`, `last_name`, `address`, `phone`, `id_role`) VALUES (2, 'John', 'johndoe@gmail.com', '123456','John', 'Doe', 'calle 20 24 28', '3009876543', 2);
+INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (1, 'admin', 'QaWsEdRF', 'Roman', 'Sarmiento', 'admin@gmail.com', 'cra 27 15 94', '3001234567', 1);
+INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (2, 'user',  'AqSwDeFr', 'John',  'Doe', 'user@gmail.com', 'calle 20 24 28', '3009876543', 2);
 
 COMMIT;
 

@@ -1,33 +1,16 @@
 // const { query } = require("../db/connection");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const connection = require("../db/connection");
-// const UserService = require("../services/user.service");
 const { sign } = require("jsonwebtoken");
 
 //configurtacion asincrona de las llamadas
 const util = require("util");
 const query = util.promisify(connection.query).bind(connection);
 
-//
-// getAllUsers: (req, res) => {
-//   UserService.getAllUsers((err, results) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(500).json({
-//         success: 0,
-//         message: err.message,
-//       });
-//     }
-//     return res.status(200).json({
-//       success: 1,
-//       data: results,
-//     });
-//   });
-// };
-
 module.exports = {
     asyncGetAllUsers: async (req, res) => {
         try {
+            
             let sql = "SELECT * FROM user";
             const rows = await query(sql);
             res.json(rows);
@@ -112,7 +95,7 @@ module.exports = {
                 if (result) {
                     rows[0].password = undefined;
                     const token = sign(
-                      { result: rows[0] },
+                      { credentials: rows[0] },
                       process.env.JWT_SECRET,
                       { expiresIn: "1h" }
                     );
@@ -143,9 +126,9 @@ module.exports = {
                 if (result) {
                     rows[0].password = undefined;
                     const token = sign(
-                        { result: rows[0] },
-                        process.env.JWT_SECRET,
-                        { expiresIn: "1h" }
+                      { credentials: rows[0] },
+                      process.env.JWT_SECRET,
+                      { expiresIn: "1h" }
                     );
 
                     return res.status(200).json({
