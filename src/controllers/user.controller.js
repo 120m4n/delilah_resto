@@ -25,7 +25,7 @@ module.exports = {
     asyncGetUserByID: async (req, res) => {
         try {
             // console.log(req.body);
-            const user_id = req.body;
+            // const user_id = req.body;
             //Obtener informacion de un usuario por id
             const { id } = req.params;
             let sql = `select id_user, user.name, username, email, last_name, address, phone, role.description
@@ -46,23 +46,15 @@ module.exports = {
     asyncCreateUser: async (req, res) => {
         const body = req.body;
         try {
-            if (body.password) {
-                const salt = genSaltSync(10);
-                body.password = hashSync(body.password, salt);
-                let sql = "INSERT INTO user VALUES (null, ?,?,?,?,?,?,?,1)";
-                const rows = await query(sql, [body.username, body.password, body.email,
-                    body.name, body.last_name, body.address, body.phone]);
-                
-                    //todo mostrar el id insertado
-                res.json(rows);
-            } else {
-                //todo revisar el error
-                return res.status(500).json({
-                    success: 0,
-                    message: 'paso por aqui',
-                });
-            }
-
+            
+            const salt = genSaltSync(10);
+            body.password = hashSync(body.password, salt);
+            let sql = "INSERT INTO user VALUES (null, ?,?,?,?,?,?,?,1)";
+            const rows = await query(sql, [body.username, body.password, body.email,
+                body.name, body.last_name, body.address, body.phone]);
+     
+            res.json(rows);
+        
         } catch (err) {
             console.log(err);
             return res.status(500).json({

@@ -20,7 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(expressJWT({ secret: JWT_SECRET, algorithms: ['HS256'] }).unless({ path: ["/login", "/users/register"] }));
 
 const UserRouter = require("./routers/user.router");
+const ProductRouter = require("./routers/product.router");
+
 app.use("/user", UserRouter);
+app.use("/product", ProductRouter);
 
 /* ---------------------------------- GESTION DE ERRORES --------------------------------- */
 //Endpoint not found error
