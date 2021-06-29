@@ -10,7 +10,7 @@ const {
 router
   .get("/", ProductController.asyncGetAll)
   .get("/:id", ProductController.asyncGetByID)
-  .post("/", AuthorizationAdmin, ProductController.asynCreate) // add AuthorizationAdmin
+  .post("/", AuthorizationAdmin, ProductController.asyncCreate) // add AuthorizationAdmin
   .put("/:id", AuthorizationAdmin, ProductController.asyncUpdate) // add AuthorizationAdmin
   .delete("/:id", AuthorizationAdmin, ProductController.asyncDelete); // add AuthorizationAdmin
 
