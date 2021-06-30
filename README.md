@@ -44,6 +44,9 @@ El archivo se encuenta en la ruta: **./Migracion/Creacion_Schema.sql**
 **Opcional
 Ejecutar el archivo "Creacion_Schema.sql" en MySQL Workbench.
 
+* Modelo Entidad-Relacion.
+![Alt modelo ER](./Migracion/ER_Diagram.PNG?raw=true "Modelo ER")
+
 
 **4) Iniciar el servidor**
 

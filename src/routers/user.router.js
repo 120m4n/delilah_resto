@@ -7,10 +7,13 @@ const {
   AuthorizationUser,
 } = require("../auth/authorization");
 
+const validationMiddleware = require("../middleware/validation-middleware");
+
+
 router
-  .post("/registration", UserController.asyncCreateUser)
+  .post("/registration", validationMiddleware.registration, UserController.asyncCreateUser)
   .get("/", AuthorizationAdmin, UserController.asyncGetAllUsers) //add middleware validation admin/user
   .get("/:id", AuthorizationUser, UserController.asyncGetUserByID) //add middleware validation admin/user
-  .post("/login", UserController.asyncLogin);
+  .post("/login",validationMiddleware.login, UserController.asyncLogin);
 
 module.exports = router;

@@ -7,11 +7,13 @@ const {
   AuthorizationUser,
 } = require("../auth/authorization");
 
+const validationMiddleware = require("../middleware/validation-middleware");
+
 router
   .get("/", ProductController.asyncGetAll)
   .get("/:id", ProductController.asyncGetByID)
-  .post("/", AuthorizationAdmin, ProductController.asyncCreate) // add AuthorizationAdmin
-  .put("/:id", AuthorizationAdmin, ProductController.asyncUpdate) // add AuthorizationAdmin
+  .post("/", validationMiddleware.product, AuthorizationAdmin, ProductController.asyncCreate) // add AuthorizationAdmin
+  .put("/:id", validationMiddleware.product, AuthorizationAdmin, ProductController.asyncUpdate) // add AuthorizationAdmin
   .delete("/:id", AuthorizationAdmin, ProductController.asyncDelete); // add AuthorizationAdmin
 
 module.exports = router;

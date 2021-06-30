@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `delilah`.`product` (
   `id_product` INT(11) NOT NULL AUTO_INCREMENT,
   `product_name` VARCHAR(45) NOT NULL,
   `price` FLOAT NOT NULL,
-  `availability` TINYINT(1) NOT NULL DEFAULT 1,
+  `availability` BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`id_product`))
 ENGINE = InnoDB;
 

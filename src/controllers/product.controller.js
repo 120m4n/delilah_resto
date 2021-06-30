@@ -76,10 +76,23 @@ module.exports = {
   asyncDelete: async (req, res) => {
     try {
       const { id } = req.params;
-      let sql = "DELETE FROM product WHERE id_product = ?";
-      const rows = await query(sql, [id]);
+      //check integrity of table favorities
+      let sql = `SELECT * FROM favorite WHERE id_product = ?`;
+      let rows = await query(sql, [id]);
 
-      res.json(rows);
+      if (rows.length > 0) {
+        // soft delete
+        sql = `UPDATE product SET availability = 2 WHERE id_product = ?`;
+        rows = await query(sql, [id]);
+        res.status(403).json({
+          message: "SoftDelete Product in favorities Table",
+          result: rows,
+        });
+      } else {
+        sql = "DELETE FROM product WHERE id_product = ?";
+        rows = await query(sql, [id]);
+        res.json(rows);
+      }
     } catch (err) {
       console.log(err);
       return res.status(500).json({

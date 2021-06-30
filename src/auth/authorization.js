@@ -23,9 +23,9 @@ module.exports = {
           });
         }
       } catch (err) {
-        res.status(500).json({
+        res.status(403).json({
           success: 0,
-          message: "invalid token",
+          message: err,
         });
       }
     } else {
@@ -39,19 +39,19 @@ module.exports = {
     let token = req.get("authorization");
     if (typeof token !== "undefined") {
       	try {
-			const tokenArray = token.split(" ");
-			token = tokenArray[1];
-			const data = jwt.verify(token, process.env.JWT_SECRET);
-			let credentials = data.credentials;
+          const tokenArray = token.split(" ");
+          token = tokenArray[1];
+          const data = jwt.verify(token, process.env.JWT_SECRET);
+          let credentials = data.credentials;
 
-			//console.log(typeof credentials.id_user);
-		  
-			let id = parseInt(req.params.id, 10);
-			//   console.log(typeof id);
+          //console.log(typeof credentials.id_user);
+          
+          let id = parseInt(req.params.id, 10);
+          //   console.log(typeof id);
 
         	if (
-				credentials.id_role === 1 ||
-				credentials.id_user === id
+            credentials.id_role === 1 ||
+            credentials.id_user === id
         	) {
           		next();
         	} else {
@@ -61,11 +61,11 @@ module.exports = {
           	});
         	}
       	} catch (error) {
-        console.log(error.message);
-        res.status(500).json({
-          success: 0,
-          message: "Server error",
-        });
+            // console.log(error.message);
+            res.status(403).json({
+              success: 0,
+              message: error,
+            });
       }
     } else {
       res.status(400).json({

@@ -30,7 +30,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.4",
-    "util": "^0.12.4"
+    "util": "^0.12.4",
+    "validatorjs": "^3.22.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
