@@ -26,9 +26,7 @@ module.exports = {
     },
     asyncGetUserByID: async (req, res) => {
         try {
-            // console.log(req.body);
-            // const user_id = req.body;
-            //Obtener informacion de un usuario por id
+
             const { id } = req.params;
             let sql = `SELECT id_user,name,last_name,username,email,address,phone, role.description as role
                         from user

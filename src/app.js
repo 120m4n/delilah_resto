@@ -21,9 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 
 const UserRouter = require("./routers/user.router");
 const ProductRouter = require("./routers/product.router");
+const OrderRouter = require("./routers/order.router");
 
 app.use("/user", UserRouter);
 app.use("/product", ProductRouter);
+app.use("/order", OrderRouter);
 
 /* ---------------------------------- GESTION DE ERRORES --------------------------------- */
 //Endpoint not found error
