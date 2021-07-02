@@ -52,6 +52,46 @@ const updateStatus = async ( id_state,id_order) => {
     }
 };
 
+// const deleteOrder = async (id_state, id_order) => {
+//   try {
+//     let sql = `UPDATE orders SET id_state = ? WHERE id_order = ?`;
+//     const rows = await query(sql, [id_state, id_order]);
+//     return rows;
+//   } catch (err) {
+//     throw err;
+//   }
+// };
+
+const getOrderById = async (id_order) => {
+  try {
+    let sql = `SELECT * FROM orders WHERE id_order = ?`;
+    const rows = await query(sql, [id_order]);
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const deleteOrderDetail = async (id_order) => {
+  try {
+    let sql = `DELETE FROM order_detail WHERE id_order = ?`;
+    const rows = await query(sql, [id_order]);
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const deleteOrder = async  (id_order) => {
+  try {
+    let sql = `DELETE FROM orders WHERE id_order = ?`;
+    const rows = await query(sql, [id_order]);
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
 
 
 module.exports = {
@@ -59,4 +99,7 @@ module.exports = {
   getPrice,
   addDetail,
   updateStatus,
+  getOrderById,
+  deleteOrderDetail,
+  deleteOrder,
 };

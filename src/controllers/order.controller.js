@@ -43,6 +43,7 @@ module.exports = {
   },
   asyncCreate: async (req, res) => {
     try {
+      
       const body = req.body;
       const neworder = await OrderService.createOrder(body);
       const id_order = neworder.insertId;
@@ -93,12 +94,27 @@ module.exports = {
   asyncDelete: async (req, res) => {
     try {
       const { id } = req.params;
-      let sql = "DELETE FROM product WHERE id_product = ?";
-      const rows = await query(sql, [id]);
+      let rows = await OrderService.getOrderById(id);
+      if (rows.length > 0) {
 
-      res.json(rows);
+        let order_detail = await OrderService.deleteOrderDetail(id);
+        let order = await OrderService.deleteOrder(id);
+
+        return res.status(200).json({
+          success: 1,
+          order: id,
+          data: order,
+        });
+
+
+      }
+
+      return res.status(404).json({
+        success: 0,
+        message: "Order Not Found",
+      });
     } catch (err) {
-      console.log(err);
+      
       return res.status(500).json({
         success: 0,
         message: err.message,

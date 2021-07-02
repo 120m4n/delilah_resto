@@ -10,16 +10,16 @@ const registration = (req, res, next) => {
     username: "required|string|min:5|max:15",
     password: "required|string|min:6",
   };
-  validator(req.body, validationRule, {}, (err, status) => {
-    if (!status) {
-      res.status(412).send({
-        success: false,
-        message: "Validation failed",
-        data: err,
-      });
-    } else {
-      next();
-    }
+validator(req.body, validationRule, {}, (err, status) => {
+  if (!status) {
+    res.status(412).send({
+      success: false,
+      message: "Validation failed",
+      data: err,
+    });
+  } else {
+    next();
+  }
   });
 };
 
@@ -42,6 +42,27 @@ const login = (req, res, next) => {
   });
 };
 
+
+const order = (req, res, next) => {
+  const validationRule = {
+    id_user: "required|numeric",
+    id_payment: "required|numeric",
+    items: "required",
+    "items.*.id_product": "required|numeric",
+    "items.*.quantity": "required|numeric",
+  };
+  validator(req.body, validationRule, {}, (err, status) => {
+    if (!status) {
+      res.status(412).send({
+        success: false,
+        message: "Validation failed",
+        data: err,
+      });
+    } else {
+      next();
+    }
+  });
+};
 
 const product = (req, res, next) => {
   const validationRule = {
@@ -66,4 +87,5 @@ module.exports = {
   registration,
   login,
   product,
+  order,
 };

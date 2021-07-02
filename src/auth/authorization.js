@@ -43,8 +43,6 @@ module.exports = {
         token = tokenArray[1];
         const { credentials } = jwt.verify(token, process.env.JWT_SECRET);
 
-
-
         if (credentials.id_role === 1 || credentials.id_role === 2) {
           next();
         } else {
@@ -67,6 +65,7 @@ module.exports = {
       });
     }
   },
+
   ConfidentialInfo: (req, res, next) => {
     let token = req.get("authorization");
     if (typeof token !== "undefined") {
@@ -83,6 +82,38 @@ module.exports = {
           res.status(401).json({
             success: 0,
             message: "Access denied! Unauthorized Id User info",
+          });
+        }
+      } catch (error) {
+        // console.log(error.message);
+        res.status(403).json({
+          success: 0,
+          message: error,
+        });
+      }
+    } else {
+      res.status(400).json({
+        success: 0,
+        message: "Should have authorization token",
+      });
+    }
+  },
+  CurrentUser: (req, res, next) => {
+    let token = req.get("authorization");
+    if (typeof token !== "undefined") {
+      try {
+        const tokenArray = token.split(" ");
+        token = tokenArray[1];
+        const { credentials } = jwt.verify(token, process.env.JWT_SECRET);
+        let id_user = req.body.id_user;
+        // console.log(id, typeof id);
+
+        if (credentials.id_role === 1 || credentials.id_user === id_user) {
+          next();
+        } else {
+          res.status(401).json({
+            success: 0,
+            message: "Access denied! Unauthorized add Info to another User",
           });
         }
       } catch (error) {
