@@ -193,8 +193,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `delilah`;
-INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (1, 'admin', 'QaWsEdRF', 'Roman', 'Sarmiento', 'admin@gmail.com', 'cra 27 15 94', '3001234567', 1);
-INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (2, 'user',  'AqSwDeFr', 'John',  'Doe', 'user@gmail.com', 'calle 20 24 28', '3009876543', 2);
+INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (1, 'admin', 'admin', 'Roman', 'Sarmiento', 'admin@gmail.com', 'cra 27 15 94', '3001234567', 1);
+INSERT INTO `delilah`.`user` (`id_user`, `username`,`password`, `name`, `last_name`,`email`, `address`, `phone`, `id_role`) VALUES (2, 'user',  'user', 'John',  'Doe', 'user@gmail.com', 'calle 20 24 28', '3009876543', 2);
 
 COMMIT;
 
@@ -206,7 +206,15 @@ START TRANSACTION;
 USE `delilah`;
 INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (1, 'Falafel', 18500);
 INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (2, 'Hamburguesa', 8500);
-INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (3, 'Pastas', 13500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (3, 'Cervezas', 12500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (4, 'Foccacia', 13500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (5, 'Sandwich Veggie', 13500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (6, 'Hamburguesa Especial', 14500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (7, 'Pastas', 15500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (8, 'Veggie Verde', 16500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (9, 'Pizza Tradicional', 17500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (10, 'Agua Mineral', 18500);
+INSERT INTO `delilah`.`product` (`id_product`, `product_name`, `price`) VALUES (11, 'Sandwich Queso', 19500);
 
 COMMIT;
 

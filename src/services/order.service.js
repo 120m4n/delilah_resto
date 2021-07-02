@@ -4,6 +4,20 @@ const connection = require("../db/connection");
 const util = require("util");
 const query = util.promisify(connection.query).bind(connection);
 
+const getAllOrder = async () => {
+  try {
+    let sql = `SELECT o.id_order, o.time, st.order_state , pay.method , u.username, u.address 
+    FROM orders o 
+    JOIN order_state st ON o.id_state = st.id_state 
+    JOIN payment pay ON o.id_payment = pay.id_payment 
+    JOIN user u ON o.id_user = u.id_user ORDER BY o.time desc;`;
+    const rows = await query(sql)
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+
+}
 
 const createOrder = async (data) => {
     try {
@@ -52,16 +66,6 @@ const updateStatus = async ( id_state,id_order) => {
     }
 };
 
-// const deleteOrder = async (id_state, id_order) => {
-//   try {
-//     let sql = `UPDATE orders SET id_state = ? WHERE id_order = ?`;
-//     const rows = await query(sql, [id_state, id_order]);
-//     return rows;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
 const getOrderById = async (id_order) => {
   try {
     let sql = `SELECT * FROM orders WHERE id_order = ?`;
@@ -95,6 +99,7 @@ const deleteOrder = async  (id_order) => {
 
 
 module.exports = {
+  getAllOrder,
   createOrder,
   getPrice,
   addDetail,

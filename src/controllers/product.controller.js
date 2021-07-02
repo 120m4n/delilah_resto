@@ -1,104 +1,107 @@
-const connection = require("../db/connection");
+const ProductService = require("../services/product.service");
 
-//configurtacion asincrona de las llamadas
-const util = require("util");
-const query = util.promisify(connection.query).bind(connection);
 
-module.exports = {
   //   getAll, getByID, create, update, delete
-  asyncGetAll: async (req, res) => {
-    try {
-      let sql =
-        "SELECT id_product, product_name, price FROM product where availability=1";
-      const rows = await query(sql);
-      res.json(rows);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: err.message,
-      });
-    }
-  },
-  asyncGetByID: async (req, res) => {
+const asyncGetAll = async (req, res) => {
+  try {
+    let rows = await ProductService.getAllProducts();
+    return res.status(200).json({
+      success: 1,
+      data: rows,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: 0,
+      message: err.message,
+    });
+  }
+};
+const asyncGetByID = async (req, res) => {
     try {
       const { id } = req.params;
-      let sql = `SELECT * FROM product 
-                WHERE id_product = ${connection.escape(id)} 
-                and availability=1;`;
-      const rows = await query(sql);
-      res.json(rows);
+      let rows = await ProductService.getProductById(id);
+      return res.status(200).json({
+        success: 1,
+        data: rows,
+      });
     } catch (err) {
-      console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: err.message,
+        });
+    }
+  };
+const asyncCreate = async (req, res) => {
+    try {
+      const { product_name, price } = req.body;
+      const rows = await ProductService.createProduct(product_name, price);
+      return res.status(200).json({
+        success: 1,
+        data: rows,
+      });
+    } catch (err) {
       return res.status(500).json({
         success: 0,
         message: err.message,
       });
     }
-  },
-  asyncCreate: async (req, res) => {
+  };
+const asyncUpdate = async (req, res) => {
     try {
-      const body = req.body;
-      let sql = "INSERT INTO product (product_name, price) VALUES (?,?)";
-      const rows = await query(sql, [body.product_name, body.price]);
-
-      res.json(rows);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: err.message,
-      });
-    }
-  },
-  asyncUpdate: async (req, res) => {
-    try {
-      const body = req.body;
+      const { product_name, price, availability } = req.body;
       const { id } = req.params;
-      let sql =
-        "UPDATE product SET product_name = ?, price = ?, availability = ? WHERE id_product = ?";
-      const rows = await query(sql, [
-        body.product_name,
-        body.price,
-        body.availability,
-        id,
-      ]);
 
-      res.json(rows);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: err.message,
+      let rows = await ProductService.updateProduct(
+        product_name,
+        price,
+        availability,
+        id
+      );
+      return res.status(200).json({
+        success: 1,
+        data: rows,
       });
+
+    } catch (err) {
+        return res.status(500).json({
+          success: 0,
+          message: err.message,
+        });
     }
-  },
-  asyncDelete: async (req, res) => {
+  };
+const asyncDelete = async (req, res) => {
     try {
       const { id } = req.params;
       //check integrity of table favorities
-      let sql = `SELECT * FROM favorite WHERE id_product = ?`;
-      let rows = await query(sql, [id]);
+      let infavorites = await ProductService.getFavoriteProductById(id);
+      let orderdetails = await ProductService.getOrderDetailsProductById(id);
 
-      if (rows.length > 0) {
+      if (infavorites.length > 0 || orderdetails.length > 0) {
         // soft delete
-        sql = `UPDATE product SET availability = 2 WHERE id_product = ?`;
-        rows = await query(sql, [id]);
+        let rows = await ProductService.softDeleteProduct(id);
         res.status(403).json({
-          message: "SoftDelete Product in favorities Table",
+          message: "SoftDelete Product in favorities Table or in order details table",
           result: rows,
         });
       } else {
-        sql = "DELETE FROM product WHERE id_product = ?";
-        rows = await query(sql, [id]);
-        res.json(rows);
+        let rows = await ProductService.deleteProduct(id);
+        return res.status(200).json({
+          success: 1,
+          data: rows,
+        });
       }
     } catch (err) {
-      console.log(err);
       return res.status(500).json({
         success: 0,
         message: err.message,
       });
     }
-  },
+  };
+module.exports = {
+  asyncGetAll,
+  asyncGetByID,
+  asyncCreate,
+  asyncUpdate,
+  asyncDelete,
+
 };
