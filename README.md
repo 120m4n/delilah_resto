@@ -77,3 +77,16 @@ Endpoints:
 | get    | /order/{id_user}      | consulta todas las ordenes de un usuario                | admin/user |
 | put    | /order/{id_order}     | actualiza el estado de una orden                        | admin      |
 | delete | /order/{id_order}     | elimina una orden                                       | admin      |
+
+## CREDENCIALES PARA PRUEBA
+# ADMIN
+{
+    "username":"admin",
+    "password":"admin"
+}
+
+# USER
+{
+    "username":"user",
+    "password":"user"
+}
