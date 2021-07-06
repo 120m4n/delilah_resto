@@ -40,7 +40,7 @@ npm install
 * En la pestaña Importar, boton "Seleccionar archivo" buscar la ruta local al archivo "Creacion_Schema.sql". 
 El archivo se encuenta en la ruta: **./Migracion/Creacion_Schema.sql**
 * Ejecutar la importacion con el boton "Continuar"
-*---- todo incluir imagen
+![Alt importacion data](./Migracion/Importacion.PNG?raw=true "importacion data")
 **Opcional
 Ejecutar el archivo "Creacion_Schema.sql" en MySQL Workbench.
 
@@ -53,5 +53,27 @@ Ejecutar el archivo "Creacion_Schema.sql" en MySQL Workbench.
 ```
 node ./src/app.js
 
-*opcional*
-npm run dev
+## Documentación de la API
+
+Abrir el archivo **120m4n-delilah-resto-1.0.0-swagger.yaml** y copiarlo en **[Swagger](https://editor.swagger.io/)** o importar el mismo desde opciones.
+
+Endpoints:
+
+**URL: http://localhost:3000/**
+
+| Metodo | EndPoint              | Descripcion                                             | Rol        |
+|--------|-----------------------|---------------------------------------------------------|------------|
+| post   | /user/login           | Genera Token jwt de usuario registrado                  | --         |
+| post   | /user/registration    | Registro de usuario nuevo                               | --         |
+| get    | /user/                | consulta la informacion de todos los usuarios           | admin      |
+| get    | /user/{id_user}       | consulta la informacion del usuario por id_user.        | admin/user |
+| get    | /product/             | consulta la informacion de todos los productos          | admin/user |
+| post   | /product/             | agrega un nuevo producto a la tabla productos           | admin      |
+| get    | /product/{id_product} | consulta la informacion de un producto por id_product   | admin/user |
+| put    | /product/{id_product} | actualizar la informacion de un producto por id_product | admin      |
+| delete | /product/{id_product} | elimina la informacion de un producto                   | admin      |
+| get    | /order/               | consulta la informacion de todos los pedidos            | admin      |
+| post   | /order/               | agrega una nueva orden a la tabla de ordenes            | admin      |
+| get    | /order/{id_user}      | consulta todas las ordenes de un usuario                | admin/user |
+| put    | /order/{id_order}     | actualiza el estado de una orden                        | admin      |
+| delete | /order/{id_order}     | elimina una orden                                       | admin      |

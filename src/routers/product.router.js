@@ -18,7 +18,7 @@ router.post(
   ProductController.asyncCreate
 );
 
-router.get("/:id_product", ProductController.asyncGetByID);
+router.get("/:id_product", AuthorizationUser, ProductController.asyncGetByID);
 
 router.put(
   "/:id_product",

@@ -1,0 +1,784 @@
+openapi: 3.0.1
+info:
+  title: Delilah Restó
+  description: API para gestión de pedidos de un restaurante. Los usuarios pueden registrarse, loguearse, ver el listado de productos y realizar ordenes. Los administradores pueden realizar operaciones CRUD sobre usuarios, productos y ordenes
+  contact:
+    name: Roman Sarmiento Gomez
+    url: https://github.com/120m4n/delilah_resto
+  license:
+    name: MIT
+    url: https://www.mit.edu/~amini/LICENSE.md
+  version: 1.0.0
+servers:
+- url: http://localhost:3000
+tags:
+  - name: user
+    description: User registration, login and management
+  - name: product
+    description: Products creation and management
+  - name: order
+    description: Orders creation and management
+paths:
+  /user/login:
+    post:
+      tags: 
+        - user
+      summary: return jw token
+      requestBody:
+        $ref: '#/components/requestBodies/Login'
+        
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '412':
+          $ref: '#/components/responses/ValidateFail'
+  /user/resgistration:
+    post:
+      tags:
+        - user
+      summary: create a user
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        '200':
+          description: OK
+          content:
+            apllication/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '412':
+          $ref: '#/components/responses/ValidateFail'
+        '500':
+          $ref: '#/components/responses/Unexpected'
+  /user/:
+    get:      
+      tags: 
+        - user
+      summary: get information from all users
+      
+      security:
+        - BearerAuth: [admin]
+      responses:
+        '200':
+          description: (ADMIN) get information form all users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "All user info"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'
+  /user/{id_user}:
+    get:
+      tags: 
+        - user
+      summary: get information from users using id_user
+      description: a registered user can only see their personal information
+      security: 
+        - BearerAuth: [admin, user]
+      parameters:
+        - name: id_user
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64      
+      responses:
+        '200':
+          description: (ADMIN/USER) personal user information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "User Information"
+                  data:
+                    $ref: '#/components/schemas/User'
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'
+          
+  /product/:
+    get:      
+      tags: 
+        - product
+      security:
+        - BearerAuth: [admin, user]
+      summary: get information from all products
+      responses:
+        '200':
+          description: get information from all products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "All products info"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+
+        '500':
+          $ref: '#/components/responses/Unexpected'
+    post:
+      tags: 
+      - product
+      summary: Create a new Product
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        $ref: '#/components/requestBodies/Product'
+      responses:
+        '200':
+          description: successfully created product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Product Created"
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request. User ID must be an integer and larger than 0.
+        '401':
+          description: Authorization information is missing or invalid.
+        '404':
+          description: A user with the specified ID was not found.
+        '500':
+          $ref: '#/components/responses/Unexpected'
+  /product/{id_product}:
+    get:
+      tags: 
+        - product
+      summary: get product information
+      security:
+        - BearerAuth: [admin, user]
+      parameters:
+      - name: id_product
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Product Info"
+                  data:
+                    $ref: '#/components/schemas/Product'
+
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'    
+    put:
+      tags: 
+        - product
+      summary: update product information
+      security:
+        - BearerAuth: [admin] 
+      parameters:
+      - name: id_product
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4
+      requestBody:
+        $ref: '#/components/requestBodies/Product'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Product update"  
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'
+          
+    delete:
+      tags: 
+        - product
+      summary: delete product
+      security:
+        - BearerAuth: [admin]
+      parameters:
+      - name: id_product
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Product deleted successfully"            
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'   
+  
+  /order/:
+    get:      
+      tags: 
+        - order
+      security:
+        - BearerAuth: [admin]
+      summary: get information from all order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: All Orders
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrderInfo'
+
+        '500':
+          $ref: '#/components/responses/Unexpected'
+    post:
+      tags: 
+      - order
+      summary: Create a new Order
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        $ref: '#/components/requestBodies/Order'
+      responses:
+        '200':
+          description: successfully created Order
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Order Create successfully"
+                  order:
+                    type: number
+                    example: 23
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrderDetail'
+        '400':
+          description: Bad request. User ID must be an integer and larger than 0.
+        '401':
+          description: Authorization information is missing or invalid.
+        '404':
+          description: A user with the specified ID was not found.
+        '500':
+          $ref: '#/components/responses/Unexpected'
+  /order/{id_user}:
+    get:      
+      tags: 
+        - order
+      security:
+        - BearerAuth: [admin, user]
+      summary: get all the orders of a user
+      parameters:
+      - name: id_user
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4 
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: All order by id_User
+                  id_user:
+                    type: number
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrderInfo'
+        '400':
+          description: Bad request. User ID must be an integer and larger than 0.
+        '401':
+          description: Authorization information is missing or invalid.
+        '404':
+          description: A user with the specified ID was not found.
+        '5XX':
+          description: Unexpected error.
+  /order/{id_order}:
+    put:
+      tags: 
+        - order
+      summary: update order information
+      security:
+        - BearerAuth: [admin] 
+      parameters:
+      - name: id_order
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4
+      requestBody:
+        description: New State
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_state:
+                  type: number
+                  enum: [1,2,3,4,5,6]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Order State update"  
+                  data:
+                    type: object
+                    properties:
+                      old_status:
+                        type: string
+                        enum : [NUEVO, CONFIRMANDO, PREPARANDO, ENVIADO, ENTREGADO, CANCELADO]
+                      new_status:
+                        type: string
+                        enum : [CONFIRMANDO, PREPARANDO, ENVIADO, ENTREGADO, CANCELADO,NUEVO ]
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'
+          
+    delete:
+      tags: 
+        - order
+      summary: delete order
+      security:
+        - BearerAuth: [admin]
+      parameters:
+      - name: id_order
+        in: path
+        required: true
+        schema:
+          type: number
+          example: 4
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "Order deleted successfully"            
+        '4XX':
+          description: Bad request. user must have authorization token.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/Unexpected'   
+          
+components:
+  requestBodies:
+    Order:
+      description: order information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Order'
+              
+    Product:
+      description: Product Information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - product_name
+              - price
+            properties:
+              product_name:
+                type: string
+                example: "HidroMiel"
+              price:
+                type: number
+                maximum: 100000
+    User:
+      description: user information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: 
+              - username
+              - password
+              - email
+              - name
+              - last_name
+              - address
+              - phone
+            properties:
+              username:
+                type: string
+                example: "admin"
+              password:
+                type: string
+                minLength: 6
+                example: 123456
+              email:
+                type: string
+                format: email
+                example: admin@mail.com
+              name:
+                type: string
+                example: pepito
+              last_name:
+                type: string
+                example: perez
+              address:
+                type: string
+                example: Avenida 555 Siempre Viva
+              phone:
+                type: number
+                example: 30122354547
+    Login:
+      description: Request username or email and password
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Login'
+              - $ref: '#/components/schemas/UsernamePass'
+              - $ref: '#/components/schemas/EmailPass'
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidateFail:
+      description: One or more field required are empty
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error' 
+    Unexpected:
+      description: Unexpected Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    OrderDetail:
+      type: object
+      properties:
+        id_order_details:
+          type: number
+          example: 44
+        id_product:
+          type: number
+          example: 7
+        quantity:
+          type: number
+          example: 1
+        price:
+          type: number
+          example: 1
+    OrderInfo:
+      type: object
+      properties:
+        id_order:
+          type: number
+          example: 23
+        time:
+          type: string
+          example: "2021-07-05T23:45:01.000Z"
+        order_state:
+          type: string
+          enum : [NUEVO, CONFIRMADO, PREPARANDO, ENVIADO, ENTREGADO, CANCELADO]
+        method:
+          type: string
+          enum: [EFECTIVO, TARJETA, TRANSFERENCIA]
+        username:
+          type: string
+          example: admin
+        address:
+          type: string
+          example: "Boulevar 550 Avenida Siempre Viva"
+    Order:
+      type: object
+      required:
+        - id_user
+        - id_payment
+        - products
+
+      properties:
+        id_user:
+          type: number
+          example: 3
+        id_payment:
+          type: number
+          enum: [1,2,3]
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemOrder'
+          
+    ItemOrder:
+      type: object
+      required:
+      - id_product
+      - quantity
+      properties:
+        id_product:
+          type: number
+          example: 2
+        quantity:
+          type: number
+          example: 1
+    User:
+      type: object
+      properties:
+        id_user: 
+          type: number
+          example: 1
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        last_name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: number
+    Product:
+      type: object
+      properties:
+        id_product:
+          type: number
+          example: 1
+        product_name:
+          type: string
+          example: "Falafel"
+        price:
+          type: number
+          example: 425
+        availability:
+          type: number
+          example: 1
+        
+      
+    UsernamePass:
+      type: object
+      properties:
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          example: admin
+      required: 
+        - username
+        - password
+    
+    EmailPass:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@mail.com
+        password:
+          type: string
+          example: admin
+      required: 
+        - email
+        - password
+    
+    
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: admin@mail.com
+          format: email
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          example: admin
+      required: 
+        - password
+    Token:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        message:
+          type: string
+          example: Login successful
+        data:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVkZW50aWFscyI6eyJpZF91c2VyIjoxLCJ1c2Vybm
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        message:
+          type: string
+          example: Error description
+        data:
+          type: object
+
+      required: 
+        - success
+        - message
+        - data
+    
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
