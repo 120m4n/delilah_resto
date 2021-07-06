@@ -7,37 +7,42 @@ const asyncGetAllUsers = async (req, res) => {
   try {
     const rows = await UserService.getAllUser();
     return res.status(200).json({
-      success: 1,
+      success: true,
+      message:'All user info',
       data: rows,
     });
   } catch (err) {
     return res.status(500).json({
-      success: 0,
+      success: false,
       message: err.message,
+      data: {}
     });
   }
 };
 const asyncGetUserByID = async (req, res) => {
   try {
-    const { id } = req.params;
-      const rows = await UserService.getUserById(id);
+    const { id_user } = req.params;
+      const rows = await UserService.getUserById(id_user);
       if (rows.length > 0) {
           return res.status(200).json({
-              success: 1,
-              data: rows,
+            success: true,
+            message: "User Information",
+            data: rows,
           });
       } else {
         return res.status(404).json({
-            success: 0,
-            message: "User Not Found",
+          success: false,
+          message: "User Not Found",
+          data: {}
         });
 
       }
 
   } catch (err) {
     return res.status(500).json({
-      success: 0,
+      success: false,
       message: err.message,
+      data: {}
     });
   }
 };
@@ -48,13 +53,23 @@ const asyncCreateUser = async (req, res) => {
     body.password = hashSync(body.password, salt);
     const rows = await UserService.createUser(body);
     return res.status(200).json({
-      success: 1,
-      data: rows,
+      success: true,
+      message: 'Successful user creation',
+      data: {
+        id_user: rows.insertId,
+        username: body.username,
+        email: body.email,
+        name: body.name,
+        last_name: body.last_name,
+        address: body.address,
+        phone: body.phone,
+      }
     });
   } catch (err) {
     return res.status(500).json({
-      success: 0,
+      success: false,
       message: err.message,
+      data: {}
     });
   }
 };
@@ -78,7 +93,7 @@ const asyncLogin = async (req, res) => {
         });
 
         return res.status(200).json({
-          success: 1,
+          success: true,
           message: "Login successful",
           token: token,
         });
@@ -86,7 +101,8 @@ const asyncLogin = async (req, res) => {
     }
     return res.status(401).json({
       success: 0,
-      data: "Invalid email or password",
+      message: "Login successful",
+      data: {},
     });
   } else {
     //get user by username
@@ -106,15 +122,16 @@ const asyncLogin = async (req, res) => {
         });
 
         return res.status(200).json({
-          success: 1,
+          success: true,
           message: "Login successful",
-          token: token,
+          data: token,
         });
       }
     }
     return res.status(401).json({
-      success: 0,
-      data: "Invalid username or password",
+      success: false,
+      message: "Invalid username or password",
+      data: {},
     });
   }
 };

@@ -6,20 +6,33 @@ const {
   AuthorizationAdmin,
   AuthorizationUser,
   CurrentUser,
+  ConfidentialInfo,
 } = require("../auth/authorization");
 
 const validationMiddleware = require("../middleware/validation-middleware");
 
 router
   .get("/", AuthorizationAdmin, OrderController.asyncGetAll)
+
   .post(
-	"/",
-	validationMiddleware.order,
-	AuthorizationUser,
-	CurrentUser,
-	OrderController.asyncCreate
+    "/",
+    validationMiddleware.order,
+    AuthorizationUser,
+    CurrentUser,
+    OrderController.asyncCreate
   )
-  .put("/:id/", AuthorizationAdmin, OrderController.asyncUpdate) //condicion 4
-  .delete("/:id", AuthorizationAdmin, OrderController.asyncDelete);
+  .get(
+    "/:id_user",
+    AuthorizationUser,
+    ConfidentialInfo,
+    OrderController.asyncGetAllByUser
+  )
+  .put(
+    "/:id_order",
+    validationMiddleware.status,
+    AuthorizationAdmin,
+    OrderController.asyncUpdate
+  )
+  .delete("/:id_order", AuthorizationAdmin, OrderController.asyncDelete);
 
 module.exports = router;

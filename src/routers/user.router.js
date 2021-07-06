@@ -12,9 +12,10 @@ const validationMiddleware = require("../middleware/validation-middleware");
 
 
 router
+  .post("/login", validationMiddleware.login, UserController.asyncLogin)
   .post("/registration", validationMiddleware.registration, UserController.asyncCreateUser)
-  .get("/", AuthorizationAdmin, UserController.asyncGetAllUsers) //add middleware validation admin/user
-  .get("/:id", AuthorizationUser,ConfidentialInfo, UserController.asyncGetUserByID) //add middleware validation admin/user
-  .post("/login",validationMiddleware.login, UserController.asyncLogin);
+  .get("/", AuthorizationAdmin, UserController.asyncGetAllUsers) 
+  .get("/:id_user", AuthorizationUser,ConfidentialInfo, UserController.asyncGetUserByID); 
+  
 
 module.exports = router;

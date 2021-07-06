@@ -9,11 +9,28 @@ const {
 
 const validationMiddleware = require("../middleware/validation-middleware");
 
-router
-  .get("/", ProductController.asyncGetAll)
-  .get("/:id", ProductController.asyncGetByID)
-  .post("/", validationMiddleware.product, AuthorizationAdmin, ProductController.asyncCreate) // add AuthorizationAdmin
-  .put("/:id", validationMiddleware.product, AuthorizationAdmin, ProductController.asyncUpdate) // add AuthorizationAdmin
-  .delete("/:id", AuthorizationAdmin, ProductController.asyncDelete); // add AuthorizationAdmin
+router.get("/", AuthorizationUser, ProductController.asyncGetAll);
+
+router.post(
+  "/",
+  validationMiddleware.product,
+  AuthorizationAdmin,
+  ProductController.asyncCreate
+);
+
+router.get("/:id_product", ProductController.asyncGetByID);
+
+router.put(
+  "/:id_product",
+  validationMiddleware.product,
+  AuthorizationAdmin,
+  ProductController.asyncUpdate
+);
+
+router.delete(
+  "/:id_product",
+  AuthorizationAdmin,
+  ProductController.asyncDelete
+);
 
 module.exports = router;

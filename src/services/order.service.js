@@ -19,6 +19,22 @@ const getAllOrder = async () => {
 
 }
 
+const getAllOrderByUserId = async (id_user) => {
+    try {
+      let sql = `SELECT o.id_order, o.time, st.order_state , pay.method , u.username, u.address 
+          FROM orders o , user u, order_state st, payment pay
+          where o.id_state = st.id_state 
+          and o.id_payment = pay.id_payment 
+          and o.id_user = u.id_user 
+          and u.id_user = ?
+          ORDER BY o.time desc;`;
+      const rows = await query(sql, [id_user]);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+}
+
 const createOrder = async (data) => {
     try {
       // console.log("createorder: "+ data);
@@ -68,7 +84,10 @@ const updateStatus = async ( id_state,id_order) => {
 
 const getOrderById = async (id_order) => {
   try {
-    let sql = `SELECT * FROM orders WHERE id_order = ?`;
+    let sql = `select o.id_order , os.order_state 
+        from orders o , order_state os 
+        where o.id_state = os.id_state 
+        and o.id_order=?`;
     const rows = await query(sql, [id_order]);
     return rows;
   } catch (err) {
@@ -96,10 +115,21 @@ const deleteOrder = async  (id_order) => {
   }
 };
 
+const existIdUser = async (id_user) => {
+  try {
+    let sql = `select id_user, id_role FROM user WHERE id_user = ?`;
+    const rows = await query(sql, [id_user]);
+    return rows;
+  } catch (err) {
+    throw err;
+  }  
+}
 
 
 module.exports = {
+  existIdUser,
   getAllOrder,
+  getAllOrderByUserId,
   createOrder,
   getPrice,
   addDetail,

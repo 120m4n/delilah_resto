@@ -66,9 +66,26 @@ const order = (req, res, next) => {
 
 const product = (req, res, next) => {
   const validationRule = {
-    product_name: "required:string",
+    product_name: "required|string",
     price: "required|numeric|max:1000000",
     availability: "boolean",
+  };
+  validator(req.body, validationRule, {}, (err, status) => {
+    if (!status) {
+      res.status(412).send({
+        success: false,
+        message: "Validation failed",
+        data: err,
+      });
+    } else {
+      next();
+    }
+  });
+};
+
+const status = (req, res, next) => {
+  const validationRule = {
+    id_state: "required|numeric|min:1|max:6",
   };
   validator(req.body, validationRule, {}, (err, status) => {
     if (!status) {
@@ -87,5 +104,6 @@ module.exports = {
   registration,
   login,
   product,
+  status,
   order,
 };
