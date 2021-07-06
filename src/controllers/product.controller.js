@@ -43,7 +43,7 @@ const asyncCreate = async (req, res) => {
         success: true,
         message: "Product Created",
         data: {
-          id_product: rows[0].insertId,
+          id_product: rows.insertId,
           product_name: product_name,
           price: price,
           availability: 1

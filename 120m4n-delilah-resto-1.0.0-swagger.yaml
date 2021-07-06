@@ -520,6 +520,7 @@ components:
             required:
               - product_name
               - price
+              - availability
             properties:
               product_name:
                 type: string
@@ -527,6 +528,9 @@ components:
               price:
                 type: number
                 maximum: 100000
+              availability:
+                type: number
+                enum: [0,1]
     User:
       description: user information
       required: true
