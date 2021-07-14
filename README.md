@@ -55,7 +55,7 @@ node ./src/app.js
 
 ## Documentación de la API
 
-Abrir el archivo **120m4n-delilah-resto-1.0.0-swagger.yaml** y copiarlo en **[Swagger](https://editor.swagger.io/)** o importar el mismo desde opciones.
+Abrir el archivo **120m4n-delilah-resto-1.0.0-swagger.yaml** y copiarlo en [Swagger](https://editor.swagger.io/) o importar el mismo desde opciones.
 
 Endpoints:
 
@@ -93,4 +93,4 @@ Endpoints:
 
 
 ## COLECCION DE POSTMAN CON EJEMPLOS DE PARAMETROS/DATOS DE BODY
-https://www.getpostman.com/collections/cc94de7fbeb73670a362
+[https://www.getpostman.com/collections/cc94de7fbeb73670a362](https://www.getpostman.com/collections/cc94de7fbeb73670a362)
