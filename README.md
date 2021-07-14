@@ -50,7 +50,7 @@ Ejecutar el archivo "Creacion_Schema.sql" en MySQL Workbench.
 
 **4) Iniciar el servidor**
 
-```
+
 node ./src/app.js
 
 ## Documentación de la API
