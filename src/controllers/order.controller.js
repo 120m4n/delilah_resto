@@ -50,9 +50,16 @@ const asyncCreate = async (req, res) => {
 
     const neworder = await OrderService.createOrder(body);
     const id_order = neworder.insertId;
-    const items = req.body.items;
-    const pArray = items.map(async (item) => {
+    const products = req.body.products;
+
+    const pArray = products.map(async (item) => {
       const { id_product, quantity } = item;
+
+      const product = await OrderService.existProduct(id_product);
+      if (product.length === 0) {
+        throw new Error("Product not found, id_product:"+id_product);
+      }
+
       const price = await OrderService.getPrice(id_product);
       const rows = await OrderService.addDetail(
         id_order,
@@ -60,14 +67,13 @@ const asyncCreate = async (req, res) => {
         quantity,
         price
       );
-      
+
       // return rows;
       return {
         id_order_details: rows.insertId,
         id_product: id_product,
         quantity: quantity,
-        price: price
-
+        price: price,
       };
     });
 
@@ -82,7 +88,7 @@ const asyncCreate = async (req, res) => {
   } catch (err) {
     // console.log(err);
     return res.status(500).json({
-      success: 0,
+      success: false,
       message: err.message,
     });
   }
@@ -107,6 +113,7 @@ const asyncUpdate = async (req, res) => {
       success: true,
       message: 'Order State Update',
       data: {
+        id_order: id_order,
         old_status: oldStatus,
         new_status: currentStatus[0].order_state,
       }

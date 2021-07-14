@@ -122,12 +122,21 @@ const existIdUser = async (id_user) => {
     return rows;
   } catch (err) {
     throw err;
-  }  
-}
+  }
+};
 
-
+const existProduct = async (id_product) => {
+  try {
+    let sql = `select id_product from product WHERE id_product = ?`;
+    const rows = await query(sql, [id_product]);
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
 module.exports = {
   existIdUser,
+  existProduct,
   getAllOrder,
   getAllOrderByUserId,
   createOrder,

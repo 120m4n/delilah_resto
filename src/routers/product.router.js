@@ -9,6 +9,8 @@ const {
 
 const validationMiddleware = require("../middleware/validation-middleware");
 
+const { ProductExist } = require("../middleware/exist-middleware");
+
 router.get("/", AuthorizationUser, ProductController.asyncGetAll);
 
 router.post(
@@ -24,12 +26,14 @@ router.put(
   "/:id_product",
   validationMiddleware.product,
   AuthorizationAdmin,
+  ProductExist,
   ProductController.asyncUpdate
 );
 
 router.delete(
   "/:id_product",
   AuthorizationAdmin,
+  ProductExist,
   ProductController.asyncDelete
 );
 

@@ -100,8 +100,8 @@ const asyncLogin = async (req, res) => {
       }
     }
     return res.status(401).json({
-      success: 0,
-      message: "Login successful",
+      success: false,
+      message: "Login Invalid email or password",
       data: {},
     });
   } else {

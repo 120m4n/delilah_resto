@@ -15,6 +15,16 @@ const getAllProducts = async () => {
   }
 };
 
+const existIdProduct = async (id_product) => {
+  try {
+    let sql = `SELECT * FROM product  WHERE id_product = ?;`;
+    const rows = await query(sql, [id_product]);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getProductById = async (id) => {
   try {
     let sql = `SELECT * FROM product  WHERE id_product = ? and availability=1;`;
@@ -87,6 +97,7 @@ const deleteProduct = async (id) => {
 };
 
 module.exports = {
+  existIdProduct,
   getFavoriteProductById,
   getOrderDetailsProductById,
   getAllProducts,

@@ -291,8 +291,20 @@ paths:
                     type: boolean
                   message:
                     type: string
-                    default: "Product deleted successfully"            
-        '4XX':
+                    default: "Product deleted successfully"
+        '403':
+          description: cannot be Deleted for referential integrity"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    default: "cannot be Deleted for referential integrity, Set Availability to 0"
+        '400':
           description: Bad request. user must have authorization token.
           content:
             application/json:
@@ -448,6 +460,9 @@ paths:
                   data:
                     type: object
                     properties:
+                      id_order:
+                        type: number
+                        example: 4
                       old_status:
                         type: string
                         enum : [NUEVO, CONFIRMANDO, PREPARANDO, ENVIADO, ENTREGADO, CANCELADO]
@@ -736,13 +751,12 @@ components:
         - email
         - password
     
-    
     Login:
       type: object
       properties:
         email:
           type: string
-          example: admin@mail.com
+          example: admin@gmail.com
           format: email
         username:
           type: string
