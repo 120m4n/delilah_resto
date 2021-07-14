@@ -91,6 +91,5 @@ Endpoints:
     "password":"user"
 }
 
-
-## COLECCION DE POSTMAN CON EJEMPLOS DE PARAMETROS/DATOS DE BODY
-[https://www.getpostman.com/collections/cc94de7fbeb73670a362](https://www.getpostman.com/collections/cc94de7fbeb73670a362)
+**5) COLECCION DE POSTMAN CON EJEMPLOS DE PARAMETROS/DATOS DE BODY**
+(https://www.getpostman.com/collections/cc94de7fbeb73670a362)
